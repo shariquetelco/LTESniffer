@@ -1,23 +1,25 @@
 
 # LTESniffer - An Open-source LTE Downlink/Uplink Eavesdropper
 
-**LTESniffer** is An Open-source LTE Downlink/Uplink Eavesdropper 
+------------------
+What it can do
+-------------------
+
+**LTESniffer** is a tool that can passively capture the wireless traffic of users in a cell. Due to the nature of LTE traffic being transferred over the air interface, anyone with the appropriate hardware can sniff LTE signals. By mimicking the behavior of both the user equipment (UE) and the base station, an LTE sniffer can decode downlink and uplink traffic, respectively. In contrast to normal UEs who only decode their traffic, a sniffer decodes all the traffic on the air including plaintext and encrypted packets.
 
 It first decodes the Physical Downlink Control Channel (PDCCH) to obtain the Downlink Control Informations (DCIs) and Radio Network Temporary Identifiers (RNTIs) of all active users. Using decoded DCIs and RNTIs, LTESniffer further decodes the Physical Downlink Shared Channel (PDSCH) and Physical Uplink Shared Channel (PUSCH) to retrieve uplink and downlink data traffic.
 
 LTESniffer supports an API with three functions for security applications and research. Many LTE security research assumes
 a passive sniffer that can capture privacy-related packets on the air. However, non of the current open-source sniffers satisfy their requirements as they cannot decode protocol packets in PDSCH and PUSCH. We developed a proof-of-concept security API that supports three tasks that were proposed by previous works: 1) Identity mapping, 2) IMSI collecting, and 3) Capability profiling.
 
-Please refer to our [paper][paper] for more details.
-
 ## LTESniffer in layman's terms
 LTESniffer is a tool that can capture the LTE wireless messages that are sent between a cell tower and smartphones connected to it. LTESniffer supports capturing the messages in both directions, from the tower to the smartphones, and from the smartphones back to the cell tower.
 
+------------------
+What it can not do
+-------------------
+
 LTESniffer **CANNOT DECRYPT** encrypted messages between the cell tower and smartphones. It can be used for analyzing unencrypted parts of the communication between the cell tower and smartphones. For example, for encrypted messages, it can allow the user to analyze unencrypted parts, such as headers in MAC and physical layers. However, those messages sent in plaintext can be completely analyzable. For example, the broadcast messages sent by the cell tower, or the messages at the beginning of the connection are completely visible.
-
-## Ethical Consideration
-
-The main purpose of LTESniffer is to support security and analysis research on the cellular network. Due to the collection of uplink-downlink user data, any use of LTESniffer must follow the local regulations on sniffing the LTE traffic. We are not responsible for any illegal purposes such as intentionally collecting user privacy-related information.
 
 ## Features
 ### New Update v2.1.0
@@ -207,7 +209,7 @@ The effective range for sniffing uplink is limited in LTESniffer due to the capa
 
 ``Processed 1000/1000 subframes``: Number of subframes was processed by LTESniffer last 1 second. There are 1000 LTE subframes per second by design. \
 ``RNTI``: Radio Network Temporary Identifier of UEs. \
-``Table``: The maximum modulation scheme that is used by smartphones in downlink. LTESniffer supports up to 256QAM in the downlink. Refer to our [paper][paper] for more details. \
+``Table``: The maximum modulation scheme that is used by smartphones in downlink. LTESniffer supports up to 256QAM in the downlink. 
 ``Active``: Number of detected messages of RNTIs. \
 ``Success``: Number of successfully decoded messages over number of detected messages (``Active``). \
 ``New TX, ReTX, HARQ, Normal``: Statistic of new messages and retransmitted messages. This function is in development. \
@@ -215,7 +217,7 @@ The effective range for sniffing uplink is limited in LTESniffer due to the capa
 
 **Uplink Sniffing Mode** 
 
-``Max Mod``: The maximum modulation scheme that is used by smartphones in uplink. It can be 16/64/256QAM depending on the support of smartphones and the configuration of the network. Refer to our [paper][paper] for more details. \
+``Max Mod``: The maximum modulation scheme that is used by smartphones in uplink. It can be 16/64/256QAM depending on the support of smartphones and the configuration of the network. \
 ``SNR``: Signal-to-noise ratio (dB). Low SNR means the uplink signal quality from the smartphone is bad. One possible reason is the smartphone is far from the sniffer. \
 ``DL-UL_delay``: The average of time delay between downlink signal from the base station and uplink signal from the smartphone. \
 ``Other Info``: Information only for debugging. 
@@ -229,27 +231,6 @@ The effective range for sniffing uplink is limited in LTESniffer due to the capa
 <!-- ## FAQ
 **Q:** Is it possible to capture and see the phone call content using LTESniffer? \
 **A:** No. LTE traffic including phone call traffic is encrypted, so you cannot use LTESniffer to know the content of phone calls of someone. Moreover, it is important to note that sniffing phone calls in the commercial network is illegal in most countries. -->
-## Credits
-We sincerely appreciate the [FALCON][falcon] and [SRS team][srsran] for making their great softwares available.
-
-## Contributor
-Special thanks to all the contributors who helped us to fix bugs and improve LTESniffer
-
-1. [cellular777][cellular77]
-2. [Cemaxecuter][Cemaxecuter]
-3. [Ksk190809][Ksk190809]
-
-## BibTex
-Please refer to our [paper][paper] for more details.
-
-```bibtex
-@inproceedings{hoang:ltesniffer,
-  title = {{LTESniffer: An Open-source LTE Downlink/Uplink Eavesdropper}},
-  author = {Hoang, Dinh Tuan and Park, CheolJun and Son, Mincheol and Oh, Taekkyung and Bae, Sangwook and Ahn, Junho and Oh, BeomSeok and Kim, Yongdae},
-  booktitle = {16th ACM Conference on Security and Privacy in Wireless and Mobile Networks (WiSec '23)},
-  year = {2023}
-}
-```
 
 ## Star History
 
@@ -274,17 +255,4 @@ To sniff the uplink traffic, LTESniffer requires USRP X310 with 2 daughterboards
 **A:** One can see only the "unencrypted" part of the messages. Note that the air traffic between the base station and users is mostly encrypted.
 
 **Q:** Is there any device identity exposed in plaintext in the LTE network? \
-**A:** Yes, literature shows that there are multiple identities exposed, such as TMSI, GUTI, IMSI, and RNTI. Please refer to the academic literature for more details. e.g. [Watching the Watchers: Practical Video Identification Attack in LTE Networks][watching]
-
-[falcon]: https://github.com/falkenber9/falcon
-[srsran]: https://github.com/srsran/srsRAN_4G
-[uhd]:    https://github.com/EttusResearch/uhd
-[paper]:  https://syssec.kaist.ac.kr/pub/2023/wisec2023_tuan.pdf
-[pcap]:   pcap_file_example/README.md
-[app]:    https://apkpure.com/cellular-z/make.more.r2d2.cellular_z
-[watching]: https://syssec.kaist.ac.kr/pub/2022/sec22summer_bae.pdf
-[multi-readme]: https://github.com/SysSec-KAIST/LTESniffer/tree/LTESniffer-multi-usrp
-[capture-readme]: https://github.com/SysSec-KAIST/LTESniffer/tree/LTESniffer-record-subframe
-[cellular77]: https://github.com/cellular777
-[Cemaxecuter]: https://www.youtube.com/@cemaxecuter7783
-[Ksk190809]: https://github.com/Ksk190809
+**A:** Yes, literature shows that there are multiple identities exposed, such as TMSI, GUTI, IMSI, and RNTI. Please refer to the academic literature for more details. e.g. [Watching the 
